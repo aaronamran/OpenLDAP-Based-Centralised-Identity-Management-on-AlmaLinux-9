@@ -55,18 +55,9 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 
   
 
-
-
-
-
-
-
-
-
-
-
-
 ## OpenLDAP Installation and Configuration
+- 
+
 
 
 ## Lubuntu Client VM Integration
