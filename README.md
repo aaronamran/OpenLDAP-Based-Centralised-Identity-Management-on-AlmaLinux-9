@@ -47,7 +47,15 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 - Create a new user. Add in the password of the new user too. After this step is completed, click Begin Installation <br />
   ![image](https://github.com/user-attachments/assets/87229d0a-f5fd-4458-9ec7-19d4ee8a79d8)
 
-- 
+- Once the installation is complete, reboot the system <br />
+  ![image](https://github.com/user-attachments/assets/f56a2b89-d9ac-4372-a348-d08435057a6c)
+
+- AlmaLinux 9 is now ready for use after logging in with the user credentials created earlier <br />
+  ![image](https://github.com/user-attachments/assets/eb9f8805-794c-4b5c-80e1-be30297f35df)
+
+  
+
+
 
 
 
