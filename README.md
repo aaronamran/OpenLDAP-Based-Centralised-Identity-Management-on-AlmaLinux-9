@@ -29,6 +29,29 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 - In the VM network settings, change NAT to Bridged Adapter <br />
   ![image](https://github.com/user-attachments/assets/1039f90b-fac8-4a39-8eba-7eb493ab6387)
 
+- Start AlmaLinux 9 VM. Choose the preferred language <br />
+  ![image](https://github.com/user-attachments/assets/a84c8218-5ca7-4966-80bd-504933f5af9f)
+
+- The Installation Summary page is shown below <br />
+  ![image](https://github.com/user-attachments/assets/f8107d40-53de-4f33-ba3b-7f03a73ca47c)
+
+- In the Installation Destination, select the disk <br />
+  ![image](https://github.com/user-attachments/assets/5cce5527-e0b2-40bf-85e5-7d67ae7661f7)
+
+- For Software Selection, choose the default settings, as we don't need to install unnecessary things for the sake of this homelab project
+  ![image](https://github.com/user-attachments/assets/33f024a5-5a43-4609-b4ce-49684475d256)
+
+- Create a new root password <br />
+  ![image](https://github.com/user-attachments/assets/fadd0027-451c-4dca-a952-8d10ffd2c687)
+
+- Create a new user. Add in the password of the new user too. After this step is completed, click Begin Installation <br />
+  ![image](https://github.com/user-attachments/assets/87229d0a-f5fd-4458-9ec7-19d4ee8a79d8)
+
+- 
+
+
+
+
 
 
 
