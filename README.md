@@ -115,12 +115,35 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 
 
 
-
-
-
-
 ## Lubuntu Client VM Integration
-- 
+- Install LDAP client packages
+  ```
+  sudo apt update
+  sudo apt install -y libnss-ldap libpam-ldap ldap-utils nslcd
+  ```
+  During setup prompts:
+  - LDAP server URI: ldap://<AlmaLinux IP>
+  - Base DN: dc=example,dc=com
+  - LDAP version: 3
+  - Make local root Database admin: Yes
+  - LDAP account for root: cn=admin,dc=example,dc=com
+- Update NSS to use LDAP. Edit `/etc/nsswitch.conf`
+  ```
+  passwd:         files ldap
+  group:          files ldap
+  shadow:         files ldap
+  ```
+
+- Enable home directory creation
+  ```
+  sudo pam-auth-update
+  ```
+  Select "Create home directory on login"
+
+- Restart necessary services
+  ```
+  sudo systemctl restart nslcd
+  ```
 
 
 
