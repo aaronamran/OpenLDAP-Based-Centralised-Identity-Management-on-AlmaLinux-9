@@ -56,14 +56,76 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
   
 
 ## OpenLDAP Installation and Configuration
-- 
+- Install and enable the required packages
+  ```
+  sudo dnf install -y openldap-servers openldap-clients migrationtools
+  ```
+  `openldap-servers` and `openldap-clients` are core LDAP daemons and tools
+  
+- Enable and start the OpenLDAP server
+  ```
+  sudo systemctl enable --now slapd
+  sudo systemctl status slapd
+  ```
+  
+- Set the LDAP admin password
+  ```
+  slappasswd
+  ```
+  Save the hashed password output for the next step
+
+- Configure LDAP root DN by creating a file named `chrootpw.ldif`
+  ```
+  dn: olcDatabase={2}mdb,cn=config
+  changetype: modify
+  replace: olcRootPW
+  olcRootPW: <hashed_password_here>
+  ```
+  Apply the config
+  ```
+  sudo ldapmodify -Y EXTERNAL -H ldapi:/// -f chrootpw.ldif
+  ```
+
+- Set the base domain by replacing `example.com` with the actual domain
+  ```
+  export BASEDN="dc=example,dc=com"
+  export ADMIN="cn=admin,$BASEDN"
+  ```
+
+- Create `basedomain.ldif`
+  ```
+  dn: $BASEDN
+  objectClass: top
+  objectClass: dcObject
+  objectclass: organization
+  o: Example Org
+  dc: example
+  
+  dn: $ADMIN
+  objectClass: organizationalRole
+  cn: admin
+  description: LDAP Admin
+  ```
+  Apply
+  ```
+  ldapadd -x -D "$ADMIN" -W -f basedomain.ldif
+  ```
+
+- Configuring LDAP TLS is optional but highly recommended. Generate or obtain a certificate and configure TLS in `/etc/openldap/slapd.d/cn=config.ldif` or via `ldapmodify`
+
+
+
+
 
 
 
 ## Lubuntu Client VM Integration
+- 
+
 
 
 ## Testing and Validation
+- 
 
 
 ## Multi-Master Replication for High Availability
