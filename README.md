@@ -148,10 +148,115 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 
 
 ## Testing and Validation
-- 
+- Add LDAP users by creating `newuser.ldif`
+  ```
+  dn: uid=john,ou=People,dc=example,dc=com
+  objectClass: inetOrgPerson
+  objectClass: posixAccount
+  objectClass: shadowAccount
+  cn: John Doe
+  sn: Doe
+  uid: john
+  uidNumber: 10001
+  gidNumber: 10001
+  homeDirectory: /home/john
+  loginShell: /bin/bash
+  userPassword: {SSHA}<hashed_pass_here>
+  ```
+
+- Add user
+  ```
+  ldapadd -x -D "$ADMIN" -W -f newuser.ldif
+  ```
+
+- Test the login from Lubuntu. Use the following command to see if the user exists
+  ```
+  getent passwd john
+  ```
+  Try logging in as john
+  
+  
 
 
 ## Multi-Master Replication for High Availability
+- This task requires a second AlmaLinux LDAP server (let's call it ldap2). Enable syncprov overlay by creating `syncprov.ldif`
+  ```
+  dn: olcOverlay=syncprov,olcDatabase={2}mdb,cn=config
+  objectClass: olcOverlayConfig
+  objectClass: olcSyncProvConfig
+  olcOverlay: syncprov
+  olcSpCheckpoint: 100 10
+  olcSpSessionLog: 100
+  ```
+
+  Apply it
+  ```
+  ldapadd -Y EXTERNAL -H ldapi:/// -f syncprov.ldif
+  ```
+  
+- Configure replication consumer on ldap2. Replace the values as necessary
+  ```
+  dn: olcDatabase={2}mdb,cn=config
+  changetype: modify
+  add: olcSyncRepl
+  olcSyncRepl: rid=001
+    provider=ldap://ldap1.example.com
+    bindmethod=simple
+    binddn="cn=admin,dc=example,dc=com"
+    credentials=yourpassword
+    searchbase="dc=example,dc=com"
+    type=refreshAndPersist
+    retry="60 +"
+    timeout=1
+  ```
+
+  Also
+  ```
+  add: olcMirrorMode
+  olcMirrorMode: TRUE
+  ```
+
+- Restart slapd on both
+  ```
+  sudo systemctl restart slapd
+  ```
+
+- Test by adding a user on ldap1 and verifying it appears on ldap2
+
+
+
 
 
 ## Automated LDIF Backups and Restores
+- To automate backups on AlmaLinux, create `/opt/ldap_backup.sh`
+  ```
+  #!/bin/bash
+  DATE=$(date +%F)
+  BACKUP_DIR="/var/backups/openldap"
+  mkdir -p $BACKUP_DIR
+  slapcat -v -l "$BACKUP_DIR/ldap-backup-$DATE.ldif"
+  ```
+  Make it executable
+  ```
+  chmod +x /opt/ldap_backup.sh
+  ```
+
+- Add the script to cron
+  ```
+  crontab -e
+  ```
+  And add
+  ```
+  0 2 * * * /opt/ldap_backup.sh
+  ```
+
+- To restore from LDIF, use
+  ```
+  sudo systemctl stop slapd
+  sudo mv /var/lib/ldap /var/lib/ldap.bak
+  sudo mkdir /var/lib/ldap
+  sudo chown ldap:ldap /var/lib/ldap
+  sudo slapadd -v -l /path/to/backup.ldif
+  sudo systemctl start slapd
+  ```
+  
