@@ -53,6 +53,42 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
 - AlmaLinux 9 is now ready for use after logging in with the user credentials created earlier <br />
   ![image](https://github.com/user-attachments/assets/eb9f8805-794c-4b5c-80e1-be30297f35df)
 
+- To add convenience to this homelab project, VirtualBox Guest Additions will need to be installed on AlmaLinux 9 VM. Use the commands
+  ```
+  sudo dnf install -y epel-release
+  sudo dnf groupinstall -y "Development Tools"
+  sudo dnf install -y kernel-devel kernel-headers dkms elfutils-libelf-devel
+  ``` 
+  If `sudo dnf install -y kernel-devel kernel-headers dkms elfutils-libelf-devel` does not work, run each of the commands below and retry after complete
+  ```
+  dnf list kernel-devel
+  sudo dnf update -y
+  sudo reboot
+  ```
+
+  ![image](https://github.com/user-attachments/assets/44f68144-8298-475b-86f8-9786c4e0a8c1) <br />
+  ![image](https://github.com/user-attachments/assets/f490edbc-651d-44bc-a8bb-55f3534dc5d0) <br />
+  ![image](https://github.com/user-attachments/assets/f4b264e8-febf-4578-81d5-0793ab6e9adb)
+
+
+
+  Then run
+  ```
+  sudo reboot
+  ```
+
+- Then in VirtualBox, with the VM running, go to Devices > Insert Guess Additions CD Image. It will mount under `/run/media/<your_user>/VBox_GAs_*`. If it does not mount automatically, use
+  ```
+  sudo mount /dev/cdrom /mnt
+  ```
+
+- Run the installer
+  ```
+  sudo /mnt/VBoxLinuxAdditions.run
+  ```
+
+- Finally, enable Clipboard Sharing in VirtualBox. Set the Shared Clipboard to Bidirectional
+  
   
 
 ## OpenLDAP Installation and Configuration
