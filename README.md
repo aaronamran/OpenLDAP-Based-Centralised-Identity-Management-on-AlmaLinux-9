@@ -86,10 +86,21 @@ This homelab project sets up a centralised user authentication using OpenLDAP wi
   ```
   sudo /mnt/VBoxLinuxAdditions.run
   ```
-  ![image](https://github.com/user-attachments/assets/85be35a6-a0a7-4839-9c87-bb162c9c3591)
+  ![image](https://github.com/user-attachments/assets/85be35a6-a0a7-4839-9c87-bb162c9c3591) <br />
 
-- Finally, enable Clipboard Sharing in VirtualBox. Set the Shared Clipboard to Bidirectional
-  
+  Then enable Clipboard Sharing in VirtualBox. Set the Shared Clipboard to Bidirectional
+- However, despite testing pasting of texts from clipboard into AlmaLinux 9 VM using Ctrl+Shift+V, no texts are successfully pasted into the CLI. This is due to the VirtualBox VM window is not a terminal emulator — it's a virtual screen output of the VM, like plugging a monitor into a physical server. Even with Guest Additions installed, the minimal install has no GUI or X11 session, so features like mouse selection and keyboard-based clipboard shortcuts (Ctrl+Shift+V) won’t work there. Ctrl+Shift+V is a keyboard shortcut specific to terminal emulators, like GNOME Terminal or Konsole. It doesn't apply in VirtualBox’s raw console window
+- So, to allow pasting of texts into the CLI, we still need an additional step which is to install a minimal GUI
+  ```
+  sudo dnf groupinstall -y "Server with GUI"
+  sudo systemctl set-default graphical.target
+  sudo reboot
+  ```
+  ![image](https://github.com/user-attachments/assets/f8b8cd4b-035c-45e0-a22a-e8c82c63624f) <br />
+
+- Now the GUI is finally available
+  ![image](https://github.com/user-attachments/assets/9d9f8975-7215-4b29-8d64-081a43a675cf)
+
   
 
 ## OpenLDAP Installation and Configuration
